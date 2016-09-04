@@ -4,15 +4,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
+
 
 public class RegActivity extends AppCompatActivity {
 
     EditText Name, Age, Email, Psd;
-    Button Reg;
+    Button Reg, Add;
     Spinner Gen;
 
     private TextWatcher mTextWatcher = new TextWatcher() {
@@ -40,6 +47,26 @@ public class RegActivity extends AppCompatActivity {
         }
 
     }
+    void saveUser(){
+        Users_data users_data = new Users_data();
+        users_data.setName(Name.getText().toString());
+        users_data.setGen(Gen.getSelectedItem().toString());
+        users_data.setAge(Integer.parseInt(Age.getText().toString()));
+        Backendless.Persistence.save( users_data, new AsyncCallback<Users_data>() {
+            public void handleResponse( Users_data response )
+            {
+                Toast success = Toast.makeText(RegActivity.this,"Запись успешно добавлена в базу",Toast.LENGTH_SHORT);
+                success.show();
+            }
+
+            public void handleFault( BackendlessFault fault )
+            {
+                Toast err = Toast.makeText(RegActivity.this,"Произошла ошибка добавления в базу",Toast.LENGTH_SHORT);
+                err.show();
+            }
+        });
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +78,7 @@ public class RegActivity extends AppCompatActivity {
         Email = (EditText) findViewById(R.id.EmailReg);
         Psd = (EditText) findViewById(R.id.PsdEdt);
         //Reg = (Button)findViewById(R.id.RegBtn);
+        Add = (Button)findViewById(R.id.button);
         Gen = (Spinner) findViewById(R.id.AgeSpinner);
 
         ArrayAdapter<?> GenAdapter = ArrayAdapter.createFromResource(this, R.array.Gen, android.R.layout.simple_spinner_item);
@@ -64,7 +92,34 @@ public class RegActivity extends AppCompatActivity {
 
         checkFieldsForEmptyValues();
 
+        Reg.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
 
+                BackendlessUser user = new BackendlessUser();
+                user.setEmail(Email.getText().toString());
+                user.setPassword(Psd.getText().toString());
+
+                Backendless.UserService.register(user, new AsyncCallback<BackendlessUser>() {
+                    public void handleResponse(BackendlessUser registeredUser) {
+                        Toast success = Toast.makeText(RegActivity.this,"Успешно зарегистрированы",Toast.LENGTH_SHORT);
+                        success.show();
+                    }
+
+                    public void handleFault(BackendlessFault fault) {
+                        Toast err = Toast.makeText(RegActivity.this,"Произошла ошибка",Toast.LENGTH_SHORT);
+                        err.show();
+                    }
+                });
+            }
+        });
+
+        Add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveUser();
+
+            }
+        });
 
     }
 }

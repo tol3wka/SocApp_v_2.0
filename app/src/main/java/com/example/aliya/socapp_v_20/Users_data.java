@@ -9,6 +9,8 @@ import com.backendless.persistence.BackendlessDataQuery;
 
 public class Users_data
 {
+  private String user_type;
+  private String Gen;
   private Integer Age;
   private String Photo;
   private String ownerId;
@@ -19,6 +21,26 @@ public class Users_data
   private String Name;
   private java.util.List<Event> ID_user_ev;
   private java.util.List<Users_joined_event> ID_user_join;
+  public String getUser_type()
+  {
+    return user_type;
+  }
+
+  public void setUser_type( String user_type )
+  {
+    this.user_type = user_type;
+  }
+
+  public String getGen()
+  {
+    return Gen;
+  }
+
+  public void setGen( String Gen )
+  {
+    this.Gen = Gen;
+  }
+
   public Integer getAge()
   {
     return Age;
