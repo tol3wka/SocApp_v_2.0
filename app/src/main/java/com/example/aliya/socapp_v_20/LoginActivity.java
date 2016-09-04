@@ -34,6 +34,8 @@ public class LoginActivity extends AppCompatActivity {
         Psswd = (EditText) findViewById(R.id.PswEdt);
         LgnBtn = (Button) findViewById(R.id.LoginBtn);
         RegTxt = (TextView) findViewById(R.id.RegTxt);
+        RegInt = new Intent(LoginActivity.this,RegActivity.class);
+        LogAttemptInt = new Intent(LoginActivity.this,MainActivity.class);
 
         if (userToken != null && !userToken.equals("")) {
             startActivity(LogAttemptInt);
@@ -48,11 +50,17 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     public void handleFault(BackendlessFault fault) {
-                        Toast.makeText(LoginActivity.this,"Неверный логин или пароль",Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(LoginActivity.this,R.string.LogInErr,Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                 },true);
             }
         });
-
+        RegTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(RegInt);
+            }
+        });
     }
 }
