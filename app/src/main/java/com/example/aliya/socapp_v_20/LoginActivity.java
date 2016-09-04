@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast toast = Toast.makeText(LoginActivity.this,R.string.LogInErr,Toast.LENGTH_SHORT);
                         toast.show();
                     }
-                },false);
+                },true);
             }
         });
         RegTxt.setOnClickListener(new View.OnClickListener() {
